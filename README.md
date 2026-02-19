@@ -160,13 +160,6 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 - Verify MinIO is running: `docker-compose ps`
 - Access MinIO Console: http://localhost:9001 (minioadmin/minioadmin)
 
-## Known Limitations (MVP)
-
-- No authentication/authorization
-- No bill splitting logic yet (Phase 2)
-- No SMS/WhatsApp notifications yet (Phase 3)
-- Manual LLM prompt adjustment may be needed for different receipt formats
-- No persistent storage for parsed receipts (in progress)
 
 ## License
 

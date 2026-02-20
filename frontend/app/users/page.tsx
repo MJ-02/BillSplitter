@@ -17,10 +17,28 @@ export default function UsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     name: "",
+    countryCode: "+962",
     phone: "",
     whatsapp_number: "",
     payment_handle: "",
   });
+
+  const countryCodes = [
+    { code: "+1", label: "USA/Canada", country: "US" },
+    { code: "+44", label: "UK", country: "GB" },
+    { code: "+91", label: "India", country: "IN" },
+    { code: "+86", label: "China", country: "CN" },
+    { code: "+81", label: "Japan", country: "JP" },
+    { code: "+33", label: "France", country: "FR" },
+    { code: "+49", label: "Germany", country: "DE" },
+    { code: "+39", label: "Italy", country: "IT" },
+    { code: "+34", label: "Spain", country: "ES" },
+    { code: "+61", label: "Australia", country: "AU" },
+    { code: "+55", label: "Brazil", country: "BR" },
+    { code: "+962", label: "Jordan", country: "JO" },
+    { code: "+971", label: "UAE", country: "AE" },
+    { code: "+966", label: "Saudi Arabia", country: "SA" },
+  ];
 
   useEffect(() => {
     fetchUsers();
@@ -45,10 +63,17 @@ export default function UsersPage() {
         ? `${process.env.NEXT_PUBLIC_API_URL}/api/users/${editingUser.id}`
         : `${process.env.NEXT_PUBLIC_API_URL}/api/users`;
       
+      const fullPhone = `${formData.countryCode}${formData.phone}`;
+      
       const response = await fetch(url, {
         method: editingUser ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          phone: fullPhone,
+          whatsapp_number: formData.whatsapp_number,
+          payment_handle: formData.payment_handle,
+        }),
       });
 
       if (response.ok) {
@@ -75,9 +100,14 @@ export default function UsersPage() {
 
   const handleEdit = (user: User) => {
     setEditingUser(user);
+    const phoneWithoutCode = user.phone.replace(/^\+\d{1,3}/, "").trim();
+    const codeMatch = user.phone.match(/^\+\d{1,3}/);
+    const extractedCode = codeMatch ? codeMatch[0] : "+1";
+    
     setFormData({
       name: user.name,
-      phone: user.phone,
+      countryCode: extractedCode,
+      phone: phoneWithoutCode,
       whatsapp_number: user.whatsapp_number || "",
       payment_handle: user.payment_handle || "",
     });
@@ -85,7 +115,7 @@ export default function UsersPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: "", phone: "", whatsapp_number: "", payment_handle: "" });
+    setFormData({ name: "", countryCode: "+1", phone: "", whatsapp_number: "", payment_handle: "" });
     setEditingUser(null);
     setShowForm(false);
   };
@@ -136,15 +166,29 @@ export default function UsersPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Phone *
                 </label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={formData.countryCode}
+                    onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                    className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white font-medium text-slate-700"
+                  >
+                    {countryCodes.map((cc) => (
+                      <option key={cc.code} value={cc.code}>
+                        {cc.code} {cc.label}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="791234567"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   WhatsApp Number
                 </label>
@@ -156,10 +200,10 @@ export default function UsersPage() {
                   }
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Payment Handle (Venmo/Zelle)
+                  Payment Handle (Cliq)
                 </label>
                 <input
                   type="text"

@@ -23,7 +23,7 @@ async def send_payment_reminder(
     restaurant: str,
     amount: float,
     items: List[str],
-    payment_method: str = "Venmo/Zelle/Cash"
+    payment_method: str = "Cliq"
 ) -> Dict:
     """
     Send a payment reminder SMS to a user
@@ -35,7 +35,7 @@ async def send_payment_reminder(
         restaurant: Restaurant name
         amount: Amount owed
         items: List of item names
-        payment_method: Payment method (default: Venmo/Zelle/Cash)
+        payment_method: Payment method (default: Cliq)
     
     Returns:
         Dict with status and message_sid

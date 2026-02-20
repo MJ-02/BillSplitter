@@ -84,7 +84,7 @@ async def send_reminder_for_split(split_id: int, db: Session = Depends(get_db)):
     recipient_phone = user.whatsapp_number if user.whatsapp_number else user.phone
     
     # Determine payment method
-    payment_method = payer.payment_handle if payer.payment_handle else "Venmo/Zelle/Cash"
+    payment_method = payer.payment_handle if payer.payment_handle else "Cliq"
     
     # Send reminder
     result = await send_payment_reminder(
@@ -154,7 +154,7 @@ async def send_all_reminders_for_order(order_id: int, db: Session = Depends(get_
         recipient_phone = user.whatsapp_number if user.whatsapp_number else user.phone
         
         # Determine payment method
-        payment_method = payer.payment_handle if payer.payment_handle else "Venmo/Zelle/Cash"
+        payment_method = payer.payment_handle if payer.payment_handle else "Cliq"
         
         reminder = {
             "recipient_name": user.name,

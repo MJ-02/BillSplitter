@@ -72,6 +72,8 @@ export default function Home() {
   const [parsedData, setParsedData] = useState<ParsedReceiptData | null>(null);
   const [ocrText, setOcrText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [annotatedImage, setAnnotatedImage] = useState<string | null>(null);
+  const [ocrEngine, setOcrEngine] = useState<string>("");
 
   // Step 2 → 3
   const [order, setOrder] = useState<Order | null>(null);
@@ -91,10 +93,16 @@ export default function Home() {
     parsed_data: ParsedReceiptData;
     ocr_raw_text: string;
     image_url: string;
+    ocr_annotated_image?: string | null;
+    ocr_engine?: string;
+    local_preview?: string;
   }) => {
     setParsedData(data.parsed_data);
     setOcrText(data.ocr_raw_text);
-    setImageUrl(data.image_url);
+    // Prefer the local base64 preview for display; fall back to the S3 URL
+    setImageUrl(data.local_preview || data.image_url);
+    setAnnotatedImage(data.ocr_annotated_image ?? null);
+    setOcrEngine(data.ocr_engine ?? "");
     setStep(2);
   };
 
@@ -150,12 +158,14 @@ export default function Home() {
     setParsedData(null);
     setOcrText("");
     setImageUrl("");
+    setAnnotatedImage(null);
+    setOcrEngine("");
     setOrder(null);
     setSplits([]);
   };
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto">
+    <div className={`space-y-8 mx-auto transition-all duration-300 ${step === 2 ? "max-w-5xl" : "max-w-2xl"}`}>
       {/* Page header */}
       <div>
         <h2 className="text-3xl font-bold text-slate-800 mb-1">Split a Bill</h2>
@@ -178,6 +188,8 @@ export default function Home() {
           parsedData={parsedData}
           ocrText={ocrText}
           imageUrl={imageUrl}
+          annotatedImage={annotatedImage}
+          ocrEngine={ocrEngine}
           users={users}
           saving={savingOrder}
           onEdit={(updated) => setParsedData(updated)}

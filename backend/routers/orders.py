@@ -35,6 +35,8 @@ async def upload_receipt(file: UploadFile = File(...), db: Session = Depends(get
             "ocr_raw_text": ocr_result["raw_text"],
             "ocr_confidence": ocr_result.get("confidence", 0),
             "ocr_engine": ocr_result.get("engine", "unknown"),
+            "ocr_annotated_image": ocr_result.get("annotated_image"),
+            "ocr_bboxes": ocr_result.get("bboxes", []),
             "parsed_data": parsed_data
         }
     except Exception as e:

@@ -54,7 +54,8 @@ export default function ReceiptUpload({ onUploadComplete }: ReceiptUploadProps) 
       }
 
       const data = await response.json();
-      onUploadComplete(data);
+      // Attach the local preview as a fallback image source in case the S3 URL isn't accessible
+      onUploadComplete({ ...data, local_preview: preview });
     } catch (err: any) {
       setError(err.message || "Failed to upload receipt");
     } finally {

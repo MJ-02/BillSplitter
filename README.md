@@ -160,6 +160,11 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 - Verify MinIO is running: `docker-compose ps`
 - Access MinIO Console: http://localhost:9001 (minioadmin/minioadmin)
 
+## TODOs
+- [ ] Show a detailed orders breakdown including the invoice image, who paid and hasn't paid yet, and more.
+- [ ] Add resturant name to order details.
+- [ ] Add a manual entry flow as an alternative to the OCR/LLM flow.
+- [ ] User Stats. including how much owes/owed, payment history and pending payments.
 
 ## License
 
